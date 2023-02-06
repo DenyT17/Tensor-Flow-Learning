@@ -59,6 +59,7 @@ eval_input_fn=make_input_fn(dftest,test_output,num_epochs=1,shuffle=False)
 linear_est=tf.estimator.LinearClassifier(feature_columns=feature_columns)
 ```
 #### Finally, I can start training the model.
+```python
 linear_est.train(train_input_fn)
 result=linear_est.evaluate(eval_input_fn)
 ```
