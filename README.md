@@ -63,3 +63,6 @@ linear_est=tf.estimator.LinearClassifier(feature_columns=feature_columns)
 linear_est.train(train_input_fn)
 result=linear_est.evaluate(eval_input_fn)
 ```
+#### At this moment accuracy is approx 0.8 Fot this reason sometimes prediction doesn't corect. I put below examples of correct and incorrect prediction. 
+![image](https://user-images.githubusercontent.com/122997699/217205100-fdab11ae-4eac-49fd-afc9-71693197057a.png)
+
