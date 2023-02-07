@@ -42,7 +42,7 @@ for feature_name in Numeric_columns:
   feature_columns.append(tf.feature_column.numeric_column(feature_name, dtype=tf.float32))
 
 # Creating input function
-def make_input_fn(data_df,label_df,num_epochs=10,shuffle=True,batch_size=32):
+def make_input_fn(data_df,label_df,num_epochs=100,shuffle=True,batch_size=32):
     def input_function():
         ds=tf.data.Dataset.from_tensor_slices((dict(data_df),label_df))
         if shuffle:
@@ -61,6 +61,7 @@ linear_est=tf.estimator.LinearClassifier(feature_columns=feature_columns)
 linear_est.train(train_input_fn)
 result=linear_est.evaluate(eval_input_fn)
 clear_output()
+print('Accuracy is: ',result['accuracy'])
 result=list(linear_est.predict(eval_input_fn))
 print('Probability of survive is equal =  ',result[10]['probabilities'][1])
 print('Did the passenger survive? ( 0 - No, 1 - Yes) : ',
