@@ -10,17 +10,31 @@
 ## Description 
 This project will be my notebook where I will put my progress in learning Tensor Flow. 
 I will create programs based on the tutorial that can be found [TensorFlow 2.0 Complete Course - Python Neural Networks for Beginners Tutorial.](https://www.youtube.com/watch?v=tPYj3fFJGjk&t=7743s)
+In this moment repository include examples following models: 
+
+-Linear Regression
+
+-DNNClassifier
 
 As progress is made, the repository will be updated.
 
 ## Dataset📁
-Dataset used in this project you can find below:
+Datasets used in this project you can find below:
+
+Titanic dataset:
 
 [Training Data](https://storage.googleapis.com/tf-datasets/titanic/train.csv)
 
 [Test Data](https://storage.googleapis.com/tf-datasets/titanic/eval.csv)
 
+
+Iris dataset:
+
+[Training Data](https://storage.googleapis.com/download.tensorflow.org/data/iris_training.csv)
+
+[Test Data](https://storage.googleapis.com/download.tensorflow.org/data/iris_test.csv)
 ## Linear Regression 
+The entire script of the program is placed in the file TensorFlow.py
 
 #### First, I create basic graphs, thanks to which I can gain some information about dataset.
 ![Figure_1](https://user-images.githubusercontent.com/122997699/217101786-d173b928-ab50-4772-9297-7b3ca6ddefc9.png)
@@ -65,4 +79,75 @@ result=linear_est.evaluate(eval_input_fn)
 ```
 #### At this moment accuracy is approx 0.8 Fot this reason sometimes prediction doesn't corect. I put below examples of correct and incorrect prediction. 
 ![image](https://user-images.githubusercontent.com/122997699/217205100-fdab11ae-4eac-49fd-afc9-71693197057a.png)
+
+## Classification
+The entire script of the program is placed in the file Iris_Prediction.py
+
+In this case i use Iris dataset and DNNClassifier (Deep Neural Network) model. The task of this part of the project is to predict the Iris flower species with the dimensions provided by the user.
+#### First I rename column od training and test dataset, and creating output data. 
+```python
+training_data=training_data.rename(
+    columns={'120':'SepalLength',
+             '4':'SepalWidth',
+             'setosa':'PetalLength',
+             'versicolor':'PetalWidth',
+             'virginica':'Species'})
+test_data=test_data.rename(
+    columns={'30':'SepalLength',
+             '4':'SepalWidth',
+             'setosa':'PetalLength',
+             'versicolor':'PetalWidth',
+             'virginica':'Species'})
+```
+#### In next step i define input_function. Unlike to Linear Regression i create only one function, wchich returnc resulting components with additional outer dimension, which is batch_size. In this case, when i will training model i will must use lambda fnction. 
+```python
+def input_function(input_data,output_data,training=True,batch_size=250):
+    dataset=tf.data.Dataset.from_tensor_slices((dict(input_data),output_data))
+    if training:
+        dataset=dataset.shuffle(1000).repeat()
+    return dataset.batch(batch_size)
+```
+#### Because all column of input data has numeric value, I create feature columns thanks to keys() method.
+for key in training_data.keys():
+```python
+    feature_columns.append(tf.feature_column.numeric_column(key=key))
+```
+#### In next step i create DNNClassifier model. In addition to the feature_columns, i must declare:
+
+- hidden_units - number hidden units per layer
+- n_classes - number of label classes
+```python
+classifier=tf.estimator.DNNClassifier(
+    feature_columns=feature_columns,
+    hidden_units=[30,10],
+    n_classes=3)
+```
+#### Now i can training model. As I wrote before i must use lambda function. 
+```python
+classifier.train(
+    input_fn=lambda:input_function(
+    training_data,training_output,training=True),
+                 steps=5000)
+```
+#### To be able to make a prediction of species with the dimensions provided by the user, I must create another input function. 
+```python
+features= ['SepalLength', 'SepalWidth', 'PetalLength', 'PetalWidth']
+def input_fn(features,batch_size=256):
+    return tf.data.Dataset.from_tensor_slices(dict(features)).batch(batch_size)
+```
+#### In next step i creat dictionary with dimension provided by the usser. 
+```python
+for feature in features:
+    valid = True
+    while valid:
+        val=input(feature + ": ")
+        if not val.isdigit():valid=False
+    predict[feature]=[float(val)]
+```
+#### At the end i can make a prediction of species.
+```python
+predictions=classifier.predict(input_fn=lambda:input_fn(predict))
+```
+#### Prediction example:
+![image](https://user-images.githubusercontent.com/122997699/217300798-8885570d-8b85-4197-84a7-f59e19d7033c.png)
 
