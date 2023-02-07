@@ -52,12 +52,11 @@ classifier.train(
     training_data,training_output,training=True),
                  steps=5000)
 # Predict Species, for a flower with user-specified dimensions
+features= ['SepalLength', 'SepalWidth', 'PetalLength', 'PetalWidth']
 def input_fn(features,batch_size=256):
     return tf.data.Dataset.from_tensor_slices(dict(features)).batch(batch_size)
 
-features= ['SepalLength', 'SepalWidth', 'PetalLength', 'PetalWidth']
 predict={}
-
 print('Please, give me the following dimensions od the flower: ')
 for feature in features:
     valid = True
