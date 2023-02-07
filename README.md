@@ -144,7 +144,7 @@ for feature in features:
         if not val.isdigit():valid=False
     predict[feature]=[float(val)]
 ```
-#### At the end i can make a prediction of species.
+#### At the end I can make a prediction of species.
 ```python
 predictions=classifier.predict(input_fn=lambda:input_fn(predict))
 ```
