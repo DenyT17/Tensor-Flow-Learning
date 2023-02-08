@@ -17,14 +17,14 @@ class_names=['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
 # Data Preprocessing
 tr_in_images=tr_in_images/255.0
 ts_in_images=ts_in_images/255.0
-# print(tr_in_images[0,24,12]) 0.9568627450980393
+
 
 # Buliding model
 
 model=keras.Sequential([
-    keras.layers.Flatten(input_shape=(28,28)), # input layer
-    keras.layers.Dense(128,activation='relu'), # hidden layer ( 128 hidden neurons, relu - rectified linear unit)
-    keras.layers.Dense(10,activation='softmax') # output layer ( 10 output neurons (becouse class), relu - softmax)
+    keras.layers.Flatten(input_shape=(28,28)),
+    keras.layers.Dense(128,activation='relu'),
+    keras.layers.Dense(10,activation='softmax')
 ])
 
 # Compile the model
