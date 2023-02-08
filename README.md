@@ -16,6 +16,8 @@ In this moment repository include examples following models:
 
 -DNNClassifier
 
+-Neural Networks
+
 As progress is made, the repository will be updated.
 
 ## Dataset📁
@@ -150,4 +152,80 @@ predictions=classifier.predict(input_fn=lambda:input_fn(predict))
 ```
 #### Prediction example:
 ![image](https://user-images.githubusercontent.com/122997699/217300798-8885570d-8b85-4197-84a7-f59e19d7033c.png)
+
+## Neural Networks 
+In this part i use Neural Network to predict type of clothes on images.
+
+The entire script of the program is placed in the file Iris_Prediction.py
+#### First I upload MNIST Fashion Dataset from keras.
+```python
+fashion_mnist=keras.datasets.fashion_mnist 
+(tr_in_images,tr_out_images),(ts_in_images,ts_out_images)=fashion_mnist.load_data()
+```
+Training input data include 60000 pictures with dimension 28x28 px. Every pixel is represented  number between 0 to 255, when 0 is black and 255 is white.
+
+Output data include number betwen 0 to 9. Every number is represented one type of clothes,  from the table: 
+```python
+class_names=['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
+               'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+```
+#### To facilitate the model learning process,i use  data processing. I change range of every pixel from 0-255 to 0-1. 
+```python
+tr_in_images=tr_in_images/255.0
+ts_in_images=ts_in_images/255.0
+```
+#### Now I can build model. I will use Sequential model from Keras. I must declare number of neurons in input, hidden and output layers. Additional i must choose activation functions.
+```python
+model=keras.Sequential([
+    keras.layers.Flatten(input_shape=(28,28)), 
+    keras.layers.Dense(128,activation='relu'), 
+    keras.layers.Dense(10,activation='softmax') 
+])
+```
+In input layer will be 784 neurons, becouse every images have 784 pixels. 
+Number of neurons in hidden layer is 128, and activation function is Rectified Linear Unit
+In output layer will be 10 neurons, because output data has 10 different type of clothes. Aditional i chose Relu softmax activation function.
+
+#### Next step is compile the model. I must choose loss function, optimizer and metrics.
+```python
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+```
+
+#### Now I can training model.
+```python
+model.fit(tr_in_images,tr_out_images,epochs=5)
+```
+#### At the end I testing my model. Additional i display test accuracy and calue of loss function. 
+```python
+test_loss,test_acc=model.evaluate(ts_in_images,ts_out_images,verbose=1)
+print('Test accuracy: ',test_acc)
+print('Loss : ',test_loss)
+```
+![image](https://user-images.githubusercontent.com/122997699/217659852-6a78fdae-b78d-4af3-af53-5432def5f8a9.png)
+
+#### Now i choose picture number 5 and 10 from test data, and make prediction. 
+```python
+# Prediction
+predictions=model.predict(ts_in_images)
+print(class_names[np.argmax(predictions[5])])
+print(class_names[ts_out_images[5]])
+plt.figure()
+plt.imshow(ts_in_images[5])
+plt.colorbar()
+print(class_names[np.argmax(predictions[10])])
+print(class_names[ts_out_images[10]])
+plt.figure()
+plt.imshow(ts_in_images[10])
+plt.colorbar()
+plt.show()
+```
+##### Images number 5:
+![Figure_1_NN](https://user-images.githubusercontent.com/122997699/217661822-36fb5735-4a42-4c8c-9f24-ebed692f78d4.png)
+##### Images number 10:
+![Figure_2_NN](https://user-images.githubusercontent.com/122997699/217661744-79aadc04-0160-4909-ba93-ae52fb67275b.png)
+##### Confirmation of correct prediction.
+![image](https://user-images.githubusercontent.com/122997699/217661719-d5159e7d-a222-4e2a-a076-5ce470da9edb.png)
+
 
