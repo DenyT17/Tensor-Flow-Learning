@@ -5,8 +5,7 @@ import matplotlib.pyplot as plt
 
 # Loading MNIST Fashion Dataset from keras
 
-fashion_mnist=keras.datasets.fashion_mnist # this lines give dataset object
-
+fashion_mnist=keras.datasets.fashion_mnist
 (tr_in_images,tr_out_images),(ts_in_images,ts_out_images)=fashion_mnist.load_data()
 # print(tr_in_images.shape) (60000, 28, 28)
 # print(tr_in_images[0,24,12]) 244 - Pixel value 0 being black 255 being white
@@ -45,9 +44,16 @@ print('Loss : ',test_loss)
 
 # Prediction
 predictions=model.predict(ts_in_images)
-print(class_names[np.argmax(predictions[5])])
-print(class_names[ts_out_images[5]])
+print('Prediction :',class_names[np.argmax(predictions[5])])
+print('Real type of cloths: ',class_names[ts_out_images[5]])
 plt.figure()
 plt.imshow(ts_in_images[5])
+plt.title('Image number 5')
+plt.colorbar()
+print('Prediction :',class_names[np.argmax(predictions[10])])
+print('Real type of cloths: ',class_names[ts_out_images[10]])
+plt.figure()
+plt.imshow(ts_in_images[10])
+plt.title('Image number 10')
 plt.colorbar()
 plt.show()
