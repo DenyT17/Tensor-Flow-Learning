@@ -10,13 +10,15 @@
 ## Description 
 This project will be my notebook where I will put my progress in learning Tensor Flow. 
 I will create programs based on the tutorial that can be found [TensorFlow 2.0 Complete Course - Python Neural Networks for Beginners Tutorial.](https://www.youtube.com/watch?v=tPYj3fFJGjk&t=7743s)
-In this moment repository include examples following models: 
+In this moment repository include examples : 
 
 -Linear Regression
 
 -DNNClassifier
 
 -Neural Networks
+
+-Deep Computer Vision
 
 As progress is made, the repository will be updated.
 
@@ -228,4 +230,62 @@ plt.show()
 ##### Confirmation of correct prediction.
 ![image](https://user-images.githubusercontent.com/122997699/217661719-d5159e7d-a222-4e2a-a076-5ce470da9edb.png)
 
+## Deep Computer Vision
+The entire script of the program is placed in the file Deep Computer Vision.py
+Deep Computer Vision work thanks to convolutional neural network. The purpose of convolutional layers is to find patterns from images that can be used to classify an image or part of an image.
 
+##### First I load data and normalize pixel values to be between 0 and 1.
+```python
+(tr_in_images,tr_out_images),(ts_in_images,ts_out_images)=datasets.cifar10.load_data()
+tr_in_images,ts_in_images=tr_in_images/255.0,ts_in_images/255.0
+class_names = ['airplane', 'automobile', 'bird', 'cat', 'deer',
+               'dog', 'frog', 'horse', 'ship', 'truck']
+```
+##### In next step I nuild model. 
+```python
+model = models.Sequential()
+model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+```
+I choose Sequential model.
+In first layer I declarate shape of input data. Additional I put number and size of filter. I also apply the activation function relu to the output of each convolution operation. 
+In the next line, I do a max pooling operation using 2x2 samples and step 2.
+In second and third layers I put number and size od fileter and choos the same activation function. After each of layer I do pooling operation.
+
+##### Now similary as in Neural Network I add Dense layer.
+```python
+model.add(layers.Flatten())
+model.add(layers.Dense(64, activation='relu'))
+model.add(layers.Dense(10))
+```
+
+##### In this moment I can train my model. I choose loss function, optimizer and metrics. 
+```python
+model.compile(optimizer='adam',
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+              metrics=['accuracy'])
+
+history = model.fit(tr_in_images, tr_out_images, epochs=4,
+                    validation_data=(ts_in_images, ts_out_images))
+```
+
+##### At the end i can evaluate model and make prediction. 
+```python
+test_loss,test_acc=model.evaluate(ts_in_images,
+                                  ts_out_images,
+                                  verbose=2)
+predictions=model.predict(ts_in_images)
+```
+##### Examples of prediction: 
+###### Prediction images:
+![Figure_1](https://user-images.githubusercontent.com/122997699/217955106-f6cc92e8-c023-4cd7-93ad-c9b59ab074f1.png)
+![Figure_2](https://user-images.githubusercontent.com/122997699/217955111-7eacfb67-3c73-4e21-9f49-0acdcf749656.png)
+![Figure_3](https://user-images.githubusercontent.com/122997699/217955109-0710b59b-29b6-4c9d-b68f-39d340f9c3b1.png)
+
+###### And prediction : 
+![image](https://user-images.githubusercontent.com/122997699/217955551-40651965-c295-4ae3-89fb-35f03c12a827.png)
+
+Accuracy is 0.6725 so prediction sometimes does not correct. 
