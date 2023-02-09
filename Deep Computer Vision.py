@@ -1,19 +1,13 @@
 import tensorflow as tf
 from tensorflow.keras import datasets, layers, models
 import matplotlib.pyplot as plt
-
+import numpy as np
 # Load data
 (tr_in_images,tr_out_images),(ts_in_images,ts_out_images)=datasets.cifar10.load_data()
 # Data Preprocessing
 tr_in_images,ts_in_images=tr_in_images/255.0,ts_in_images/255.0
 class_names = ['airplane', 'automobile', 'bird', 'cat', 'deer',
                'dog', 'frog', 'horse', 'ship', 'truck']
-
-# img_index=25
-#
-# plt.imshow(tr_in_images[img_index],cmap=plt.cm.binary)
-# plt.xlabel(class_names[tr_out_images[img_index][0]])
-# plt.show()
 
 # Building Convolutions Base
 model = models.Sequential()
@@ -37,8 +31,29 @@ history = model.fit(tr_in_images, tr_out_images, epochs=4,
                     validation_data=(ts_in_images, ts_out_images))
 
 # Evaluating the Model
-
 test_loss,test_acc=model.evaluate(ts_in_images,
                                   ts_out_images,
                                   verbose=2)
-print(test_acc)
+predictions=model.predict(ts_in_images)
+plt.figure()
+print('First Prediction :',class_names[np.argmax(predictions[10])])
+print('Real type of first clothes: ',class_names[ts_out_images[10][0]])
+pred_img = 10  # change this to look at other images
+plt.imshow(ts_in_images[pred_img] ,cmap=plt.cm.binary)
+plt.title('First images')
+plt.show()
+plt.figure()
+print('Second Prediction :',class_names[np.argmax(predictions[13])])
+print('Real type of second clothes: ',class_names[ts_out_images[13][0]])
+pred_img = 13 # change this to look at other images
+plt.imshow(ts_in_images[pred_img] ,cmap=plt.cm.binary)
+plt.title('Second images')
+plt.show()
+plt.figure()
+print('Third Prediction :',class_names[np.argmax(predictions[113])])
+print('Real type of third clothes: ',class_names[ts_out_images[113][0]])
+pred_img = 113 # change this to look at other images
+plt.imshow(ts_in_images[pred_img] ,cmap=plt.cm.binary)
+plt.title('Third images')
+plt.show()
+
