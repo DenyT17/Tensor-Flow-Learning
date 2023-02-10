@@ -327,8 +327,7 @@ for batch in datagen.flow(img,save_prefix='test',save_format='jpeg'):
 plt.show()
 ```
 ##### Examples of new images:
-![image](https://user-images.githubusercontent.com/122997699/218143120-d7aa02b8-26d8-4e50-842c-5cef12a8fea8.png)
-![image](https://user-images.githubusercontent.com/122997699/218143171-8b12aac1-dbec-4447-b2d4-1eb4ed5e241f.png)
-![image](https://user-images.githubusercontent.com/122997699/218143233-426c3b25-2a3f-43fd-ab4b-10f17eff4ec2.png)
-
+![Figure_01](https://user-images.githubusercontent.com/122997699/218143830-93f1469c-a304-4b01-833e-8754b74b0808.png)
+![Figure_11](https://user-images.githubusercontent.com/122997699/218143850-e33bb762-e303-461b-a0d9-fd8d3b749f8e.png)
+![Figure_5](https://user-images.githubusercontent.com/122997699/218143866-3bf26b28-a514-4a6a-b9db-c171d7964558.png)
 
