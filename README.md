@@ -289,3 +289,46 @@ predictions=model.predict(ts_in_images)
 ![image](https://user-images.githubusercontent.com/122997699/217955551-40651965-c295-4ae3-89fb-35f03c12a827.png)
 
 Accuracy is 0.6725 so prediction sometimes does not correct. 
+
+## Data Augmentation
+The entire script of the program is placed in the file Deep Data Augmentation.py
+Thanks to Data Augmentation I can multiple number of image in my dataset.ImageDataGenerator from keras create new images based on my images. New images are created through edit old images based on operation like: horizontal flip, height and width shift, zoom, rotation.
+
+##### First I must create data generator object. In this step i declare parameters, which will be respected along generation new images. 
+```python
+datagen=ImageDataGenerator(
+    rotation_range=45,
+    width_shift_range=0.3,
+    height_shift_range=0.3,
+    shear_range=0.3,
+    zoom_range=0.3,
+    horizontal_flip=True,
+    fill_mode='nearest')
+```
+##### The ImageDataGenerator class has three methods:
+- flow()
+- flow_from_directory()
+- flow_from_dataframe()
+In this example I use first method. For this reason I must prepare the data accordingly.
+```python
+test_img=tr_in_images[15]
+img=imag.img_to_array(test_img)
+img=img.reshape((1,)+img.shape)
+```
+##### Now I create for loop thanks to witch I generate new image and display they. 
+```python
+i=0
+for batch in datagen.flow(img,save_prefix='test',save_format='jpeg'):
+    plt.figure(i)
+    plot=plt.imshow(imag.img_to_array(batch[0]))
+    i+=1
+    if i > 5:
+        break
+plt.show()
+```
+##### Examples of new images:
+![image](https://user-images.githubusercontent.com/122997699/218143120-d7aa02b8-26d8-4e50-842c-5cef12a8fea8.png)
+![image](https://user-images.githubusercontent.com/122997699/218143171-8b12aac1-dbec-4447-b2d4-1eb4ed5e241f.png)
+![image](https://user-images.githubusercontent.com/122997699/218143233-426c3b25-2a3f-43fd-ab4b-10f17eff4ec2.png)
+
+
