@@ -20,6 +20,8 @@ In this moment repository include examples :
 
 -Deep Computer Vision
 
+-Data Augmentation
+
 As progress is made, the repository will be updated.
 
 ## Dataset📁
