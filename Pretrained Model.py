@@ -65,5 +65,7 @@ validation_steps=20
 history = model.fit(train_batches,
                     epochs=initial_epochs,
                     validation_data=validation_batches)
+acc = history.history['accuracy']
+print(acc)
 model.save("dogs_vs_cats.h5")
 new_model = tf.keras.models.load_model('dogs_vs_cats.h5')
