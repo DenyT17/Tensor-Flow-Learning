@@ -337,3 +337,68 @@ plt.show()
 
 ## Pretrained Model 
 The entire script of the program is placed in the file Deep Pretrained Model.py
+Thanks to Pretrained Model, i can improve accuracy of my model. I will use CNN's model. This model was trained on millions of images, so I must add only tweak the final layers in our convolutional base. 
+
+##### First I must split the data. I will use cats_vs_dogs dataset. I split data in ratio: training 80%, valuation 10%, test 10%. Additional I create columns name. 
+(raw_train,raw_validation,raw_test),metadata=tfds.load(
+```python
+    'cats_vs_dogs',
+    split=['train[:80%]','train[80%:90%]','train[90%:]'],
+    with_info=True,
+    as_supervised=True)
+    get_label_name = metadata.features['label'].int2str
+```
+##### In next step I preparate images. I must change size of image that every image will have the same size. 
+```python
+def format_example(image,label):
+    image=tf.cast(image,tf.float32)
+    image = image/255
+    image = tf.image.resize(image,(img_size,img_size))
+    return image,label
+train = raw_train.map(format_example)
+validation = raw_validation.map(format_example)
+test = raw_test.map(format_example)
+```
+##### Now I must shuffle and batche the images. 
+```python
+ATCH_SIZE = 32
+SHUFFLE_BUFFER_SIZE = 1000
+train_batches = train.shuffle(SHUFFLE_BUFFER_SIZE).batch(BATCH_SIZE)
+validation_batches = validation.batch(BATCH_SIZE)
+test_batches = test.batch(BATCH_SIZE)
+```
+##### I choose MobileNetV2 pretrained model. I declare shape of images, and don't include top layers.
+```python
+IMH_SHAPE=(img_size,img_size,3)
+base_model=tf.keras.applications.MobileNetV2(input_shape=IMH_SHAPE,
+                                             include_top=False,
+                                             weights='imagenet')
+```
+##### Layers from pretrained model working pretty good, so I won't change his weights during training. For this reason i frozen the base.
+```python
+base_model.trainable = False
+```
+##### Now I can add my Classifier. Because at output I want only one value (cat or dog), number of output neurons is one. 
+```python
+global_average_layer = tf.keras.layers.GlobalAveragePooling2D()
+prediction_layer = keras.layers.Dense(1)
+model = tf.keras.Sequential([
+  base_model,
+  global_average_layer,
+  prediction_layer
+])
+```
+##### At the end I can compile, and train my model. It looks very similary like Deep Computer Vision, but I set optimizer learning rate at 0.0001. 
+```python
+base_learning_rate = 0.0001
+model.compile(optimizer=tf.keras.optimizers.RMSprop(lr=base_learning_rate),
+              loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+              metrics=['accuracy'])
+initial_epochs = 3
+validation_steps=20
+history = model.fit(train_batches,
+                    epochs=initial_epochs,
+                    validation_data=validation_batches)
+```
+##### Accuracy and loss function are: 
+![image](https://user-images.githubusercontent.com/122997699/218591659-1e86c997-aed8-4a3c-8112-b933ac63f19a.png)
