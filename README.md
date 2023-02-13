@@ -22,6 +22,8 @@ In this moment repository include examples :
 
 -Data Augmentation
 
+-Pretrained Model
+
 As progress is made, the repository will be updated.
 
 ## Dataset📁
@@ -333,3 +335,5 @@ plt.show()
 ![Figure_11](https://user-images.githubusercontent.com/122997699/218143850-e33bb762-e303-461b-a0d9-fd8d3b749f8e.png)
 ![Figure_5](https://user-images.githubusercontent.com/122997699/218143866-3bf26b28-a514-4a6a-b9db-c171d7964558.png)
 
+## Pretrained Model 
+The entire script of the program is placed in the file Deep Pretrained Model.py
